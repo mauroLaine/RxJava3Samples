@@ -1,9 +1,5 @@
 package com.laine.mauro.rxjava3samples.samples;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;

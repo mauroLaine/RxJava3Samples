@@ -14,9 +14,9 @@ public class CreateSamples {
 
     public static void main(String[] args) {
 //        tryInterval();
-        tryJust();
-
-
+//        tryJust();
+//        tryRange();
+        tryMerge();
     }
 
     private static void tryInterval() {
@@ -69,5 +69,48 @@ public class CreateSamples {
                 return s.length() < 5;
             }
         }).subscribe(observer);
+    }
+
+    private static void tryRange() {
+        final Observable<Integer> observable = Observable.range(1, 50);
+        final Observable<Integer> observable2 = Observable.range(51, 50);
+
+        final Observer<Integer> observer = new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                System.out.println("onSubscribe");
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                System.out.println("onNext: " + integer);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onComplete() {
+                System.out.println("onComplete");
+            }
+        };
+        observable.concatWith(observable2).subscribe(observer);
+    }
+
+    private static void tryMerge() {
+        final String[] namesSquadA = {"Brock", "John", "Eric", "Ali", "John", "Edward", "Brian"};
+        final Observable<String> observableA = Observable.fromArray(namesSquadA);
+        final Observable<String> observableB = Observable.just("Joan", "Edward", "Alex", "Max", "Brian", "Eric");
+        final Consumer<String> consumer = new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Throwable {
+                System.out.println(s);
+            }
+        };
+        final CompositeDisposable compositeDisposable = new CompositeDisposable();
+        final Disposable disposable = observableA.mergeWith(observableB).distinct().subscribe(consumer);
+        compositeDisposable.add(disposable);
     }
 }
